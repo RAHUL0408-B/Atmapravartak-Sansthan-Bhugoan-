@@ -7,13 +7,13 @@ import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyCn0rBJSrfLxgKVrsd_UpGEPUjcxbX0Xow",
-    authDomain: "atmapravartak-sansthan-bhugoan.firebaseapp.com",
-    projectId: "atmapravartak-sansthan-bhugoan",
-    storageBucket: "atmapravartak-sansthan-bhugoan.firebasestorage.app",
-    messagingSenderId: "575288625663",
-    appId: "1:575288625663:web:fd72509062b4fabf26ffca",
-    measurementId: "G-JT1BXKXBJ2"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
