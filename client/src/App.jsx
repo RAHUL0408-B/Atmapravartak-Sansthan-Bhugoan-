@@ -32,9 +32,9 @@ function AppRoutes() {
     <>
       {user && <Navigation />}
       <Routes>
-        <Route path="/login" element={user ? <Navigate to="/" /> : <LoginPage />} />
-        <Route path="/signup" element={user ? <Navigate to="/" /> : <SignupPage />} />
-        <Route path="/forgot-password" element={user ? <Navigate to="/" /> : <ForgotPasswordPage />} />
+        <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <LoginPage />} />
+        <Route path="/signup" element={user ? <Navigate to="/dashboard" /> : <SignupPage />} />
+        <Route path="/forgot-password" element={user ? <Navigate to="/dashboard" /> : <ForgotPasswordPage />} />
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <Dashboard />

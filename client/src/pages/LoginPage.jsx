@@ -13,7 +13,7 @@ const LoginPage = () => {
 
     useEffect(() => {
         if (user) {
-            navigate('/');
+            navigate('/dashboard');
         }
     }, [user, navigate]);
 
@@ -24,7 +24,7 @@ const LoginPage = () => {
         const result = await login(email, password);
         setLoading(false);
         if (result.success) {
-            navigate('/');
+            navigate('/dashboard');
         } else {
             setError(result.message);
         }
@@ -36,7 +36,7 @@ const LoginPage = () => {
         const result = await signInWithGoogle();
         setLoading(false);
         if (result.success) {
-            navigate('/');
+            navigate('/dashboard');
         } else {
             setError(result.message);
         }
