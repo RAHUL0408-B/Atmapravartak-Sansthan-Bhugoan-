@@ -70,6 +70,7 @@ const Collectors = () => {
                 <table className="custom-table" style={{ width: '100%', borderCollapse: 'collapse', minWidth: '800px' }}>
                     <thead>
                         <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #e9ecef', textAlign: 'left' }}>
+                            <th style={{ padding: '15px', color: '#495057', fontWeight: '600', width: '60px' }}>अ.क्र.</th>
                             <th style={{ padding: '15px', color: '#495057', fontWeight: '600' }}>नाव (Name)</th>
                             <th style={{ padding: '15px', color: '#495057', fontWeight: '600' }}>मोबाईल (Mobile)</th>
                             <th style={{ padding: '15px', color: '#495057', fontWeight: '600' }}>पत्ता (Address)</th>
@@ -83,8 +84,9 @@ const Collectors = () => {
                                 <td colSpan="5" className="text-center" style={{ padding: '20px' }}>कोणतेही संकलक आढळले नाहीत.</td>
                             </tr>
                         ) : (
-                            collectors.map((collector) => (
+                            collectors.map((collector, index) => (
                                 <tr key={collector.id} style={{ borderBottom: '1px solid #e9ecef' }}>
+                                    <td style={{ padding: '12px 15px', verticalAlign: 'top', fontWeight: 'bold', color: '#666' }}>{index + 1}</td>
                                     <td style={{ padding: '12px 15px', verticalAlign: 'top' }}>{collector.name}</td>
                                     <td style={{ padding: '12px 15px', verticalAlign: 'top' }}>{collector.mobile || '-'}</td>
                                     <td style={{ padding: '12px 15px', verticalAlign: 'top' }}>{collector.address || '-'}</td>
