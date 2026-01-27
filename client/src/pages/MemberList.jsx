@@ -151,56 +151,73 @@ const MemberList = () => {
             </div>
 
             {filteredMembers.length === 0 ? (
-                <div className="card text-center">
+                <div className="card text-center" style={{ padding: '20px' }}>
                     <p>कोणीही सदस्य आढळले नाहीत.</p>
                 </div>
             ) : (
-                <div className="member-grid">
-                    {filteredMembers.map((member) => (
-                        <div key={member.id} className="card">
-                            <div className="member-card-header">
-                                <div style={{
-                                    width: '50px',
-                                    height: '50px',
-                                    borderRadius: '50%',
-                                    backgroundColor: '#eee',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    marginRight: '15px',
-                                    overflow: 'hidden'
-                                }}>
-                                    {member.photo_url ? (
-                                        <img src={member.photo_url} alt={member.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                    ) : (
-                                        <User size={24} color="var(--text-light)" />
-                                    )}
-                                </div>
-                                <div>
-                                    <h3 style={{ fontSize: '1.1rem', margin: 0 }}>{member.full_name_marathi || member.full_name}</h3>
-                                    <small style={{ color: 'var(--text-light)' }}>
-                                        {member.city_marathi || member.city}, {member.taluka_marathi || member.taluka}
-                                    </small>
-                                </div>
-                            </div>
-
-                            <div style={{ marginBottom: '15px', fontSize: '0.9rem', color: '#555', paddingLeft: '65px' }}>
-                                <p style={{ margin: '4px 0' }}><strong>मोबाईल (Mobile):</strong> {member.mobile || '-'}</p>
-                                <p style={{ margin: '4px 0' }}><strong>जिल्हा (District):</strong> {member.district_marathi || member.district}</p>
-                            </div>
-
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                                <Link to={`/members/edit/${member.id}`} className="btn" style={{ padding: '5px 10px', backgroundColor: '#f0f0f0' }}>
-                                    <Edit size={16} />
-                                </Link>
-                                {isAdmin && (
-                                    <button onClick={() => handleDelete(member.id)} className="btn" style={{ padding: '5px 10px', backgroundColor: '#fee2e2', color: '#dc2626' }}>
-                                        <Trash2 size={16} />
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    ))}
+                <div className="card" style={{ overflowX: 'auto', padding: '0' }}>
+                    <table className="custom-table" style={{ width: '100%', borderCollapse: 'collapse', minWidth: '800px' }}>
+                        <thead>
+                            <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #e9ecef', textAlign: 'left' }}>
+                                <th style={{ padding: '15px', color: '#495057', fontWeight: '600', width: '60px' }}>अ.क्र.</th>
+                                <th style={{ padding: '15px', color: '#495057', fontWeight: '600' }}>नाव (Name)</th>
+                                <th style={{ padding: '15px', color: '#495057', fontWeight: '600' }}>मोबाईल (Mobile)</th>
+                                <th style={{ padding: '15px', color: '#495057', fontWeight: '600' }}>पत्ता (Address)</th>
+                                <th style={{ padding: '15px', color: '#495057', fontWeight: '600' }}>क्रिया (Actions)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredMembers.map((member, index) => (
+                                <tr key={member.id} style={{ borderBottom: '1px solid #e9ecef' }}>
+                                    <td style={{ padding: '12px 15px', verticalAlign: 'middle', fontWeight: 'bold', color: '#666' }}>{index + 1}</td>
+                                    <td style={{ padding: '12px 15px', verticalAlign: 'middle' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                            <div style={{
+                                                width: '32px',
+                                                height: '32px',
+                                                borderRadius: '50%',
+                                                backgroundColor: '#eee',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                overflow: 'hidden',
+                                                flexShrink: 0
+                                            }}>
+                                                {member.photo_url ? (
+                                                    <img src={member.photo_url} alt={member.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                ) : (
+                                                    <User size={16} color="var(--text-light)" />
+                                                )}
+                                            </div>
+                                            <div>
+                                                <div style={{ fontWeight: '500' }}>{member.full_name_marathi || member.full_name}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style={{ padding: '12px 15px', verticalAlign: 'middle' }}>{member.mobile || '-'}</td>
+                                    <td style={{ padding: '12px 15px', verticalAlign: 'middle' }}>
+                                        {[
+                                            member.city_marathi || member.city,
+                                            member.taluka_marathi || member.taluka,
+                                            member.district_marathi || member.district
+                                        ].filter(Boolean).join(', ')}
+                                    </td>
+                                    <td style={{ padding: '12px 15px', verticalAlign: 'middle' }}>
+                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                            <Link to={`/members/edit/${member.id}`} className="btn" style={{ padding: '6px', backgroundColor: '#f0f0f0', color: '#333' }} title="संपादित करा">
+                                                <Edit size={16} />
+                                            </Link>
+                                            {isAdmin && (
+                                                <button onClick={() => handleDelete(member.id)} className="btn" style={{ padding: '6px', backgroundColor: '#fee2e2', color: '#dc2626' }} title="हटवा">
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            )}
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             )}
         </div>
