@@ -8,6 +8,7 @@ import {
     updateDoc,
     deleteDoc,
     query,
+    where,
     orderBy,
     serverTimestamp
 } from 'firebase/firestore';
@@ -16,7 +17,11 @@ const collectorsCollection = collection(db, 'collectors');
 
 export const getCollectors = async () => {
     try {
-        const q = query(collectorsCollection, orderBy('created_at', 'desc'));
+        const q = query(
+            collectorsCollection,
+            where('isDeleted', '==', false),
+            orderBy('created_at', 'desc')
+        );
         const querySnapshot = await getDocs(q);
         const collectors = [];
         querySnapshot.forEach((doc) => {
@@ -49,6 +54,7 @@ export const createCollector = async (collectorData) => {
     try {
         const docRef = await addDoc(collectorsCollection, {
             ...collectorData,
+            isDeleted: false,
             created_at: serverTimestamp(),
             updated_at: serverTimestamp()
         });
@@ -82,9 +88,44 @@ export const updateCollector = async (id, collectorData) => {
 export const deleteCollector = async (id) => {
     try {
         const collectorDoc = doc(db, 'collectors', id);
-        await deleteDoc(collectorDoc);
+        await updateDoc(collectorDoc, {
+            isDeleted: true,
+            updated_at: serverTimestamp()
+        });
     } catch (error) {
-        console.error('Error deleting collector:', error);
+        console.error('Error soft deleting collector:', error);
         throw error;
+    }
+};
+
+export const restoreCollector = async (id) => {
+    try {
+        const collectorDoc = doc(db, 'collectors', id);
+        await updateDoc(collectorDoc, {
+            isDeleted: false,
+            updated_at: serverTimestamp()
+        });
+    } catch (error) {
+        console.error('Error restoring collector:', error);
+        throw error;
+    }
+};
+
+export const getDeletedCollectors = async () => {
+    try {
+        const q = query(
+            collectorsCollection,
+            where('isDeleted', '==', true),
+            orderBy('updated_at', 'desc')
+        );
+        const querySnapshot = await getDocs(q);
+        const collectors = [];
+        querySnapshot.forEach((doc) => {
+            collectors.push({ id: doc.id, ...doc.data() });
+        });
+        return collectors;
+    } catch (error) {
+        console.error('Error getting deleted collectors:', error);
+        return [];
     }
 };

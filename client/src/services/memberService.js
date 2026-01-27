@@ -8,6 +8,7 @@ import {
     updateDoc,
     deleteDoc,
     query,
+    where,
     orderBy,
     serverTimestamp
 } from 'firebase/firestore';
@@ -16,7 +17,11 @@ const membersCollection = collection(db, 'members');
 
 export const getMembers = async () => {
     try {
-        const q = query(membersCollection, orderBy('created_at', 'desc'));
+        const q = query(
+            membersCollection,
+            where('isDeleted', '==', false),
+            orderBy('created_at', 'desc')
+        );
         const querySnapshot = await getDocs(q);
         const members = [];
         querySnapshot.forEach((doc) => {
@@ -49,6 +54,7 @@ export const createMember = async (memberData) => {
     try {
         const docRef = await addDoc(membersCollection, {
             ...memberData,
+            isDeleted: false,
             created_at: serverTimestamp(),
             updated_at: serverTimestamp()
         });
@@ -82,9 +88,44 @@ export const updateMember = async (id, memberData) => {
 export const deleteMember = async (id) => {
     try {
         const memberDoc = doc(db, 'members', id);
-        await deleteDoc(memberDoc);
+        await updateDoc(memberDoc, {
+            isDeleted: true,
+            updated_at: serverTimestamp()
+        });
     } catch (error) {
-        console.error('Error deleting member:', error);
+        console.error('Error soft deleting member:', error);
         throw error;
+    }
+};
+
+export const restoreMember = async (id) => {
+    try {
+        const memberDoc = doc(db, 'members', id);
+        await updateDoc(memberDoc, {
+            isDeleted: false,
+            updated_at: serverTimestamp()
+        });
+    } catch (error) {
+        console.error('Error restoring member:', error);
+        throw error;
+    }
+};
+
+export const getDeletedMembers = async () => {
+    try {
+        const q = query(
+            membersCollection,
+            where('isDeleted', '==', true),
+            orderBy('updated_at', 'desc')
+        );
+        const querySnapshot = await getDocs(q);
+        const members = [];
+        querySnapshot.forEach((doc) => {
+            members.push({ id: doc.id, ...doc.data() });
+        });
+        return members;
+    } catch (error) {
+        console.error('Error getting deleted members:', error);
+        return [];
     }
 };

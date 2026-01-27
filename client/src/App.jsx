@@ -12,15 +12,17 @@ import Programs from './pages/Programs'
 import ProgramForm from './pages/ProgramForm'
 import Collectors from './pages/Collectors'
 import CollectorForm from './components/CollectorForm'
+import AdminDeletedItems from './pages/AdminDeletedItems'
 import Header from './components/Header'
 import Navigation from './components/Navigation'
 import './App.css'
 
-const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useContext(AuthContext);
+const ProtectedRoute = ({ children, adminOnly = false }) => {
+  const { user, isAdmin, loading } = useContext(AuthContext);
 
   if (loading) return <div>Loading...</div>;
   if (!user) return <Navigate to="/login" />;
+  if (adminOnly && !isAdmin) return <Navigate to="/dashboard" />;
 
   return children;
 };
@@ -83,6 +85,11 @@ function AppRoutes() {
         <Route path="/collectors/edit/:id" element={
           <ProtectedRoute>
             <CollectorForm />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/deleted" element={
+          <ProtectedRoute adminOnly={true}>
+            <AdminDeletedItems />
           </ProtectedRoute>
         } />
       </Routes>

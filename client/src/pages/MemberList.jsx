@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import AuthContext from '../contexts/AuthContext';
 import { getMembers, deleteMember } from '../services/memberService';
 import { Edit, Trash2, Plus, User, Download } from 'lucide-react';
 import addressData from '../data/address_data.json';
 import { exportToExcel, exportToPDF } from '../utils/exportUtils';
 
 const MemberList = () => {
+    const { isAdmin } = useContext(AuthContext);
     const [members, setMembers] = useState([]);
     const [filteredMembers, setFilteredMembers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -191,9 +193,11 @@ const MemberList = () => {
                                 <Link to={`/members/edit/${member.id}`} className="btn" style={{ padding: '5px 10px', backgroundColor: '#f0f0f0' }}>
                                     <Edit size={16} />
                                 </Link>
-                                <button onClick={() => handleDelete(member.id)} className="btn" style={{ padding: '5px 10px', backgroundColor: '#fee2e2', color: '#dc2626' }}>
-                                    <Trash2 size={16} />
-                                </button>
+                                {isAdmin && (
+                                    <button onClick={() => handleDelete(member.id)} className="btn" style={{ padding: '5px 10px', backgroundColor: '#fee2e2', color: '#dc2626' }}>
+                                        <Trash2 size={16} />
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))}

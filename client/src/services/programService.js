@@ -8,6 +8,7 @@ import {
     updateDoc,
     deleteDoc,
     query,
+    where,
     orderBy,
     serverTimestamp
 } from 'firebase/firestore';
@@ -17,7 +18,11 @@ const programsCollection = collection(db, 'programs');
 
 export const getPrograms = async () => {
     try {
-        const q = query(programsCollection, orderBy('event_date', 'desc'));
+        const q = query(
+            programsCollection,
+            where('isDeleted', '==', false),
+            orderBy('event_date', 'desc')
+        );
         const querySnapshot = await getDocs(q);
         const programs = [];
         querySnapshot.forEach((doc) => {
@@ -52,6 +57,7 @@ export const createProgram = async (programData) => {
 
         const docRef = await addDoc(programsCollection, {
             ...programData,
+            isDeleted: false,
             created_at: serverTimestamp(),
             updated_at: serverTimestamp()
         });
@@ -100,10 +106,45 @@ export const updateProgram = async (id, programData) => {
 export const deleteProgram = async (id) => {
     try {
         const programDoc = doc(db, 'programs', id);
-        await deleteDoc(programDoc);
+        await updateDoc(programDoc, {
+            isDeleted: true,
+            updated_at: serverTimestamp()
+        });
     } catch (error) {
-        console.error('Error deleting program:', error);
+        console.error('Error soft deleting program:', error);
         throw error;
+    }
+};
+
+export const restoreProgram = async (id) => {
+    try {
+        const programDoc = doc(db, 'programs', id);
+        await updateDoc(programDoc, {
+            isDeleted: false,
+            updated_at: serverTimestamp()
+        });
+    } catch (error) {
+        console.error('Error restoring program:', error);
+        throw error;
+    }
+};
+
+export const getDeletedPrograms = async () => {
+    try {
+        const q = query(
+            programsCollection,
+            where('isDeleted', '==', true),
+            orderBy('updated_at', 'desc')
+        );
+        const querySnapshot = await getDocs(q);
+        const programs = [];
+        querySnapshot.forEach((doc) => {
+            programs.push({ id: doc.id, ...doc.data() });
+        });
+        return programs;
+    } catch (error) {
+        console.error('Error getting deleted programs:', error);
+        return [];
     }
 };
 

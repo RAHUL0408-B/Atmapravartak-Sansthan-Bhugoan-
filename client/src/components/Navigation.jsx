@@ -1,14 +1,17 @@
-import { Link, useLocation } from 'react-router-dom';
-import { Home, Users, Calendar, Wallet } from 'lucide-react';
+import { Home, Users, Calendar, Wallet, Trash2 } from 'lucide-react';
+import { useContext } from 'react';
+import AuthContext from '../contexts/AuthContext';
 
 const Navigation = () => {
     const location = useLocation();
+    const { isAdmin } = useContext(AuthContext);
 
     const navItems = [
         { path: '/dashboard', label: 'डॅशबोर्ड', labelEn: 'Dashboard', icon: Home },
         { path: '/', label: 'सदस्य', labelEn: 'Members', icon: Users },
         { path: '/programs', label: 'कार्यक्रम', labelEn: 'Programs', icon: Calendar },
-        { path: '/collectors', label: 'संकलक', labelEn: 'Collectors', icon: Wallet }
+        { path: '/collectors', label: 'संकलक', labelEn: 'Collectors', icon: Wallet },
+        ...(isAdmin ? [{ path: '/admin/deleted', label: 'हटवलेले', labelEn: 'Deleted', icon: Trash2 }] : [])
     ];
 
     return (

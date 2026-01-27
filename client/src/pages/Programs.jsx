@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import AuthContext from '../contexts/AuthContext';
 import { Calendar, Plus, Edit, Trash2, MapPin, Clock } from 'lucide-react';
 import { getPrograms, deleteProgram } from '../services/programService';
 
 const Programs = () => {
+    const { isAdmin } = useContext(AuthContext);
     const [programs, setPrograms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -137,13 +139,15 @@ const Programs = () => {
                                 >
                                     <Edit size={16} />
                                 </Link>
-                                <button
-                                    onClick={() => handleDelete(program.id)}
-                                    className="btn"
-                                    style={{ padding: '5px 10px', backgroundColor: '#fee2e2', color: '#dc2626' }}
-                                >
-                                    <Trash2 size={16} />
-                                </button>
+                                {isAdmin && (
+                                    <button
+                                        onClick={() => handleDelete(program.id)}
+                                        className="btn"
+                                        style={{ padding: '5px 10px', backgroundColor: '#fee2e2', color: '#dc2626' }}
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))}

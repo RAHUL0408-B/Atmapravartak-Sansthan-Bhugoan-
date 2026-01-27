@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import AuthContext from '../contexts/AuthContext';
 import { getCollectors, deleteCollector } from '../services/collectorService';
 import { Edit, Trash2, Plus, Download, ChevronDown, ChevronUp } from 'lucide-react';
 import { exportCollectorsToExcel } from '../utils/exportUtils';
 
 const Collectors = () => {
+    const { isAdmin } = useContext(AuthContext);
     const [collectors, setCollectors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -130,9 +132,11 @@ const Collectors = () => {
                                             <Link to={`/collectors/edit/${collector.id}`} className="btn" style={{ padding: '6px', backgroundColor: '#f0f0f0', color: '#333' }} title="संपादित करा">
                                                 <Edit size={16} />
                                             </Link>
-                                            <button onClick={() => handleDelete(collector.id)} className="btn" style={{ padding: '6px', backgroundColor: '#fee2e2', color: '#dc2626' }} title="हटवा">
-                                                <Trash2 size={16} />
-                                            </button>
+                                            {isAdmin && (
+                                                <button onClick={() => handleDelete(collector.id)} className="btn" style={{ padding: '6px', backgroundColor: '#fee2e2', color: '#dc2626' }} title="हटवा">
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            )}
                                         </div>
                                     </td>
                                 </tr>

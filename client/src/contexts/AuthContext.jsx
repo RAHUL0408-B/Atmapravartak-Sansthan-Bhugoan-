@@ -19,23 +19,31 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
             if (firebaseUser) {
-                // Update last login in Firestore
+                // Update last login and get user data from Firestore
                 try {
                     const userRef = doc(db, 'users', firebaseUser.uid);
                     await setDoc(userRef, {
                         lastLogin: serverTimestamp()
                     }, { merge: true });
+
+                    const userDoc = await getDoc(userRef);
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        setIsAdmin(userData.role === 'admin');
+                    }
                 } catch (error) {
-                    console.error('Error updating last login:', error);
+                    console.error('Error updating/fetching user data:', error);
                 }
                 setUser(firebaseUser);
             } else {
                 setUser(null);
+                setIsAdmin(false);
             }
             setLoading(false);
         });
@@ -157,6 +165,7 @@ export const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider value={{
             user,
+            isAdmin,
             loading,
             login,
             signup,
