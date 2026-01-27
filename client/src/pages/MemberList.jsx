@@ -156,25 +156,32 @@ const MemberList = () => {
                 </div>
             ) : (
                 <div className="card" style={{ overflowX: 'auto', padding: '0' }}>
-                    <table className="custom-table" style={{ width: '100%', borderCollapse: 'collapse', minWidth: '800px' }}>
+                    <table className="custom-table" style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1200px' }}>
                         <thead>
                             <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #e9ecef', textAlign: 'left' }}>
-                                <th style={{ padding: '15px', color: '#495057', fontWeight: '600', width: '60px' }}>अ.क्र.</th>
-                                <th style={{ padding: '15px', color: '#495057', fontWeight: '600' }}>नाव (Name)</th>
-                                <th style={{ padding: '15px', color: '#495057', fontWeight: '600' }}>मोबाईल (Mobile)</th>
-                                <th style={{ padding: '15px', color: '#495057', fontWeight: '600' }}>पत्ता (Address)</th>
-                                <th style={{ padding: '15px', color: '#495057', fontWeight: '600' }}>क्रिया (Actions)</th>
+                                <th style={{ padding: '12px', color: '#495057', fontWeight: '600', width: '50px' }}>अ.क्र.</th>
+                                <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>अनु.दिनांक</th>
+                                <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>सभासदाचे नाव</th>
+                                <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>गाव</th>
+                                <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>पोस्ट</th>
+                                <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>जिल्हा</th>
+                                <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>तालुका</th>
+                                <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>राज्य</th>
+                                <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>मोबाईल नंबर</th>
+                                <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>पत्ता</th>
+                                <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>क्रिया (Actions)</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredMembers.map((member, index) => (
                                 <tr key={member.id} style={{ borderBottom: '1px solid #e9ecef' }}>
-                                    <td style={{ padding: '12px 15px', verticalAlign: 'middle', fontWeight: 'bold', color: '#666' }}>{index + 1}</td>
-                                    <td style={{ padding: '12px 15px', verticalAlign: 'middle' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <td style={{ padding: '10px 12px', verticalAlign: 'middle', fontWeight: 'bold', color: '#666' }}>{index + 1}</td>
+                                    <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>{member.joining_date || '-'}</td>
+                                    <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                             <div style={{
-                                                width: '32px',
-                                                height: '32px',
+                                                width: '28px',
+                                                height: '28px',
                                                 borderRadius: '50%',
                                                 backgroundColor: '#eee',
                                                 display: 'flex',
@@ -186,30 +193,29 @@ const MemberList = () => {
                                                 {member.photo_url ? (
                                                     <img src={member.photo_url} alt={member.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                                 ) : (
-                                                    <User size={16} color="var(--text-light)" />
+                                                    <User size={14} color="var(--text-light)" />
                                                 )}
                                             </div>
-                                            <div>
-                                                <div style={{ fontWeight: '500' }}>{member.full_name_marathi || member.full_name}</div>
-                                            </div>
+                                            <span style={{ fontWeight: '500' }}>{member.full_name_marathi || member.full_name}</span>
                                         </div>
                                     </td>
-                                    <td style={{ padding: '12px 15px', verticalAlign: 'middle' }}>{member.mobile || '-'}</td>
-                                    <td style={{ padding: '12px 15px', verticalAlign: 'middle' }}>
-                                        {[
-                                            member.city_marathi || member.city,
-                                            member.taluka_marathi || member.taluka,
-                                            member.district_marathi || member.district
-                                        ].filter(Boolean).join(', ')}
+                                    <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>{member.city_marathi || member.city || '-'}</td>
+                                    <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>{member.post_office_marathi || member.post_office || '-'}</td>
+                                    <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>{member.district_marathi || member.district || '-'}</td>
+                                    <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>{member.taluka_marathi || member.taluka || '-'}</td>
+                                    <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>{member.state_marathi || member.state || '-'}</td>
+                                    <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>{member.mobile || '-'}</td>
+                                    <td style={{ padding: '10px 12px', verticalAlign: 'middle', maxWidth: '200px' }}>
+                                        {member.address_line1_marathi || member.address_line1} {member.address_line2_marathi || member.address_line2 ? `, ${member.address_line2_marathi || member.address_line2}` : ''}
                                     </td>
-                                    <td style={{ padding: '12px 15px', verticalAlign: 'middle' }}>
-                                        <div style={{ display: 'flex', gap: '8px' }}>
-                                            <Link to={`/members/edit/${member.id}`} className="btn" style={{ padding: '6px', backgroundColor: '#f0f0f0', color: '#333' }} title="संपादित करा">
-                                                <Edit size={16} />
+                                    <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>
+                                        <div style={{ display: 'flex', gap: '6px' }}>
+                                            <Link to={`/members/edit/${member.id}`} className="btn" style={{ padding: '4px', backgroundColor: '#f0f0f0', color: '#333' }} title="संपादित करा">
+                                                <Edit size={14} />
                                             </Link>
                                             {isAdmin && (
-                                                <button onClick={() => handleDelete(member.id)} className="btn" style={{ padding: '6px', backgroundColor: '#fee2e2', color: '#dc2626' }} title="हटवा">
-                                                    <Trash2 size={16} />
+                                                <button onClick={() => handleDelete(member.id)} className="btn" style={{ padding: '4px', backgroundColor: '#fee2e2', color: '#dc2626' }} title="हटवा">
+                                                    <Trash2 size={14} />
                                                 </button>
                                             )}
                                         </div>
