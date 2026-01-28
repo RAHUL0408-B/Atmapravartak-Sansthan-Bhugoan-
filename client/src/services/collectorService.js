@@ -20,7 +20,7 @@ export const getCollectors = async () => {
         const q = query(
             collectorsCollection,
             where('isDeleted', '==', false),
-            orderBy('created_at', 'desc')
+            orderBy('created_at', 'asc')
         );
         const querySnapshot = await getDocs(q);
         const collectors = [];

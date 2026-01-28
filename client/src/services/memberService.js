@@ -20,7 +20,7 @@ export const getMembers = async () => {
         const q = query(
             membersCollection,
             where('isDeleted', '==', false),
-            orderBy('created_at', 'desc')
+            orderBy('created_at', 'asc')
         );
         const querySnapshot = await getDocs(q);
         const members = [];
