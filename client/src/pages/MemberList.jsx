@@ -164,8 +164,8 @@ const MemberList = () => {
                                 <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>सभासदाचे नाव</th>
                                 <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>गाव</th>
                                 <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>पोस्ट</th>
-                                <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>जिल्हा</th>
                                 <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>तालुका</th>
+                                <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>जिल्हा</th>
                                 <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>राज्य</th>
                                 <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>मोबाईल नंबर</th>
                                 <th style={{ padding: '12px', color: '#495057', fontWeight: '600' }}>पत्ता</th>
@@ -201,8 +201,8 @@ const MemberList = () => {
                                     </td>
                                     <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>{member.city_marathi || member.city || '-'}</td>
                                     <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>{member.post_office_marathi || member.post_office || '-'}</td>
-                                    <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>{member.district_marathi || member.district || '-'}</td>
                                     <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>{member.taluka_marathi || member.taluka || '-'}</td>
+                                    <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>{member.district_marathi || member.district || '-'}</td>
                                     <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>{member.state_marathi || member.state || '-'}</td>
                                     <td style={{ padding: '10px 12px', verticalAlign: 'middle' }}>{member.mobile || '-'}</td>
                                     <td style={{ padding: '10px 12px', verticalAlign: 'middle', maxWidth: '200px' }}>

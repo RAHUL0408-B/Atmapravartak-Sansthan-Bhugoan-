@@ -13,8 +13,8 @@ export const exportToExcel = async (members, filename = 'members_list.xlsx') => 
         { header: 'सभासदाचे नाव', key: 'name', width: 35 },
         { header: 'गाव', key: 'village', width: 20 },
         { header: 'पोस्ट', key: 'post', width: 20 },
-        { header: 'जिल्हा', key: 'district', width: 20 },
         { header: 'तालुका', key: 'taluka', width: 20 },
+        { header: 'जिल्हा', key: 'district', width: 20 },
         { header: 'राज्य', key: 'state', width: 10 },
         { header: 'मोबाईल नंबर', key: 'mobile', width: 15 },
         { header: 'पत्ता', key: 'address', width: 30 }
