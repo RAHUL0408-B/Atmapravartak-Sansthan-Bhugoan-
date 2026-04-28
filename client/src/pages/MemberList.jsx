@@ -21,6 +21,11 @@ const MemberList = () => {
     const [filterEndDate, setFilterEndDate] = useState('');
     const [filterAge, setFilterAge] = useState('');
 
+    // New Filters
+    const [filterRegistrationOrder, setFilterRegistrationOrder] = useState('');
+    const [filterGender, setFilterGender] = useState('');
+    const [filterAgeGroup, setFilterAgeGroup] = useState('');
+
     // Dropdown options
     const [districts, setDistricts] = useState([]);
     const [talukas, setTalukas] = useState([]);
@@ -33,7 +38,7 @@ const MemberList = () => {
 
     useEffect(() => {
         filterData();
-    }, [members, filterDistrict, filterTaluka, filterCity, filterStartDate, filterEndDate, filterAge]);
+    }, [members, filterDistrict, filterTaluka, filterCity, filterStartDate, filterEndDate, filterAge, filterRegistrationOrder, filterGender, filterAgeGroup]);
 
     // Update Talukas when District changes
     useEffect(() => {
@@ -89,7 +94,7 @@ const MemberList = () => {
     };
 
     const filterData = () => {
-        let result = members;
+        let result = [...members];
         if (filterDistrict) result = result.filter(m => m.district === filterDistrict);
         if (filterTaluka) result = result.filter(m => m.taluka === filterTaluka);
         if (filterCity) result = result.filter(m => m.city === filterCity);
@@ -104,6 +109,39 @@ const MemberList = () => {
             result = result.filter(m => {
                 const age = calculateAge(m.date_of_birth);
                 return age !== null && age.toString() === filterAge;
+            });
+        }
+
+        // New filter: Gender
+        if (filterGender) {
+            result = result.filter(m => m.gender === filterGender);
+        }
+
+        // New filter: Age Group
+        if (filterAgeGroup) {
+            result = result.filter(m => {
+                const age = calculateAge(m.date_of_birth);
+                if (age === null) return false;
+                if (filterAgeGroup === '18-25') return age >= 18 && age <= 25;
+                if (filterAgeGroup === '26-35') return age >= 26 && age <= 35;
+                if (filterAgeGroup === '36-50') return age >= 36 && age <= 50;
+                if (filterAgeGroup === '50+') return age > 50;
+                return true;
+            });
+        }
+
+        // New filter: Registration Order (sort by created_at)
+        if (filterRegistrationOrder === 'first') {
+            result = result.slice().sort((a, b) => {
+                const aTime = a.created_at?.seconds ?? 0;
+                const bTime = b.created_at?.seconds ?? 0;
+                return aTime - bTime;
+            });
+        } else if (filterRegistrationOrder === 'latest') {
+            result = result.slice().sort((a, b) => {
+                const aTime = a.created_at?.seconds ?? 0;
+                const bTime = b.created_at?.seconds ?? 0;
+                return bTime - aTime;
             });
         }
 
@@ -141,41 +179,136 @@ const MemberList = () => {
             </div>
 
             {/* Filters */}
-            <div className="card filter-grid" style={{ marginBottom: '20px' }}>
-                <select value={filterDistrict} onChange={(e) => setFilterDistrict(e.target.value)} style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}>
-                    <option value="">सर्व जिल्हे (All Districts)</option>
-                    {districts.map(d => <option key={d} value={d}>{d}</option>)}
-                </select>
-
-                <select value={filterTaluka} onChange={(e) => setFilterTaluka(e.target.value)} style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }} disabled={!filterDistrict}>
-                    <option value="">सर्व तालुके (All Talukas)</option>
-                    {talukas.map(t => <option key={t} value={t}>{t}</option>)}
-                </select>
-
-                <select value={filterCity} onChange={(e) => setFilterCity(e.target.value)} style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }} disabled={!filterTaluka}>
-                    <option value="">सर्व गावे (All Villages)</option>
-                    {cities.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                    <span style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>पासून (From):</span>
-                    <input type="date" value={filterStartDate} onChange={(e) => setFilterStartDate(e.target.value)} style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', width: '100%' }} />
+            <div className="card" style={{ marginBottom: '20px' }}>
+                {/* Section Label */}
+                <div style={{ marginBottom: '12px', fontWeight: '600', color: 'var(--primary-color)', fontSize: '0.9rem', borderBottom: '1px solid var(--gold-light)', paddingBottom: '8px' }}>
+                    🔍 फिल्टर पर्याय (Filter Options)
                 </div>
+                <div className="filter-grid">
+                    {/* ── Existing Filters ── */}
+                    <select value={filterDistrict} onChange={(e) => setFilterDistrict(e.target.value)} style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}>
+                        <option value="">सर्व जिल्हे (All Districts)</option>
+                        {districts.map(d => <option key={d} value={d}>{d}</option>)}
+                    </select>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                    <span style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>पर्यंत (To):</span>
-                    <input type="date" value={filterEndDate} onChange={(e) => setFilterEndDate(e.target.value)} style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', width: '100%' }} />
-                </div>
+                    <select value={filterTaluka} onChange={(e) => setFilterTaluka(e.target.value)} style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }} disabled={!filterDistrict}>
+                        <option value="">सर्व तालुके (All Talukas)</option>
+                        {talukas.map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                    <span style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>वय (Age):</span>
-                    <input 
-                        type="number" 
-                        placeholder="उदा. 25" 
-                        value={filterAge} 
-                        onChange={(e) => setFilterAge(e.target.value)} 
-                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', width: '80px' }} 
-                    />
+                    <select value={filterCity} onChange={(e) => setFilterCity(e.target.value)} style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }} disabled={!filterTaluka}>
+                        <option value="">सर्व गावे (All Villages)</option>
+                        {cities.map(c => <option key={c} value={c}>{c}</option>)}
+                    </select>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <span style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>पासून (From):</span>
+                        <input type="date" value={filterStartDate} onChange={(e) => setFilterStartDate(e.target.value)} style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', width: '100%' }} />
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <span style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>पर्यंत (To):</span>
+                        <input type="date" value={filterEndDate} onChange={(e) => setFilterEndDate(e.target.value)} style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', width: '100%' }} />
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <span style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>वय (Age):</span>
+                        <input
+                            type="number"
+                            placeholder="उदा. 25"
+                            value={filterAge}
+                            onChange={(e) => setFilterAge(e.target.value)}
+                            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', width: '80px' }}
+                        />
+                    </div>
+
+                    {/* ── New Filter 1: Registration Order ── */}
+                    <select
+                        value={filterRegistrationOrder}
+                        onChange={(e) => setFilterRegistrationOrder(e.target.value)}
+                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                        title="नोंदणी क्रम (Registration Order)"
+                    >
+                        <option value="">नोंदणी क्रम (Registration Order)</option>
+                        <option value="first">प्रथम नोंदणी (First Registered)</option>
+                        <option value="latest">अलीकडील नोंदणी (Latest Registered)</option>
+                    </select>
+
+                    {/* ── New Filter 2: Gender ── */}
+                    <select
+                        value={filterGender}
+                        onChange={(e) => setFilterGender(e.target.value)}
+                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                        title="लिंग (Gender)"
+                    >
+                        <option value="">सर्व लिंग (All Genders)</option>
+                        <option value="Male">पुरुष (Male)</option>
+                        <option value="Female">महिला (Female)</option>
+                        <option value="Other">इतर (Other)</option>
+                    </select>
+
+                    {/* ── New Filter 3: Age Group ── */}
+                    <select
+                        value={filterAgeGroup}
+                        onChange={(e) => setFilterAgeGroup(e.target.value)}
+                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                        title="वय गट (Age Group)"
+                    >
+                        <option value="">सर्व वय गट (All Age Groups)</option>
+                        <option value="18-25">१८–२५ वर्षे (18–25)</option>
+                        <option value="26-35">२६–३५ वर्षे (26–35)</option>
+                        <option value="36-50">३६–५० वर्षे (36–50)</option>
+                        <option value="50+">५०+ वर्षे (50+)</option>
+                    </select>
+
+                    {/* ── New Filter 4: Village Member Count (info badge) ── */}
+                    {filterCity && (
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            padding: '8px 12px',
+                            borderRadius: '4px',
+                            backgroundColor: 'var(--gold-light)',
+                            border: '1px solid var(--gold-color)',
+                            fontWeight: '600',
+                            color: 'var(--secondary-color)',
+                            fontSize: '0.85rem',
+                            whiteSpace: 'nowrap'
+                        }}>
+                            🏘️ {filterCity}:<span style={{ color: 'var(--primary-dark)', marginLeft: '4px' }}>{filteredMembers.length} सदस्य</span>
+                        </div>
+                    )}
+
+                    {/* ── Reset All Filters ── */}
+                    {(filterDistrict || filterTaluka || filterCity || filterStartDate || filterEndDate || filterAge || filterRegistrationOrder || filterGender || filterAgeGroup) && (
+                        <button
+                            onClick={() => {
+                                setFilterDistrict('');
+                                setFilterTaluka('');
+                                setFilterCity('');
+                                setFilterStartDate('');
+                                setFilterEndDate('');
+                                setFilterAge('');
+                                setFilterRegistrationOrder('');
+                                setFilterGender('');
+                                setFilterAgeGroup('');
+                            }}
+                            style={{
+                                padding: '8px 14px',
+                                borderRadius: '4px',
+                                border: '1px solid #dc2626',
+                                backgroundColor: '#fee2e2',
+                                color: '#dc2626',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                fontSize: '0.85rem',
+                                whiteSpace: 'nowrap'
+                            }}
+                        >
+                            ✕ सर्व फिल्टर साफ करा (Reset All)
+                        </button>
+                    )}
                 </div>
             </div>
 
