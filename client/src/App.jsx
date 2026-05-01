@@ -13,6 +13,7 @@ import ProgramForm from './pages/ProgramForm'
 import Collectors from './pages/Collectors'
 import CollectorForm from './components/CollectorForm'
 import AdminDeletedItems from './pages/AdminDeletedItems'
+import Reports from './pages/Reports'
 import Header from './components/Header'
 import Navigation from './components/Navigation'
 import './App.css'
@@ -85,6 +86,11 @@ function AppRoutes() {
         <Route path="/collectors/edit/:id" element={
           <ProtectedRoute>
             <CollectorForm />
+          </ProtectedRoute>
+        } />
+        <Route path="/reports" element={
+          <ProtectedRoute>
+            <Reports />
           </ProtectedRoute>
         } />
         <Route path="/admin/deleted" element={
