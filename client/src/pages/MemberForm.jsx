@@ -29,6 +29,7 @@ const MemberForm = () => {
         post_office: '',
         post_office_marathi: '',
         pincode: '',
+        gender: 'Male', // Default
     });
 
     const [districts, setDistricts] = useState([]);
@@ -190,6 +191,7 @@ const MemberForm = () => {
         // Double Save / Confirmation Option
         const confirmMessage = `कृपया माहिती तपासा (Please recheck data):\n\n` +
             `नाव: ${formData.full_name_marathi || formData.full_name}\n` +
+            `लिंग: ${formData.gender}\n` +
             `गाव: ${formData.city_marathi || formData.city}\n` +
             `मोबाईल: ${formData.mobile || '-'}\n\n` +
             `माहिती जतन करायची आहे का? (Do you want to save this member?)`;
@@ -252,6 +254,21 @@ const MemberForm = () => {
                         <div>
                             <label style={labelStyle}>पूर्ण नाव (मराठीत) *</label>
                             <input type="text" name="full_name_marathi" value={formData.full_name_marathi} onChange={handleChange} className="input-style" placeholder="नाव मराठीत (Auto)" />
+                        </div>
+                    </div>
+
+                    <div style={formGroupStyle}>
+                        <label style={labelStyle}>लिंग (Gender) *</label>
+                        <div style={{ display: 'flex', gap: '20px', padding: '5px 0' }}>
+                            <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                <input type="radio" name="gender" value="Male" checked={formData.gender === 'Male'} onChange={handleChange} /> पुरुष (Male)
+                            </label>
+                            <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                <input type="radio" name="gender" value="Female" checked={formData.gender === 'Female'} onChange={handleChange} /> स्त्री (Female)
+                            </label>
+                            <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                <input type="radio" name="gender" value="Other" checked={formData.gender === 'Other'} onChange={handleChange} /> इतर (Other)
+                            </label>
                         </div>
                     </div>
 

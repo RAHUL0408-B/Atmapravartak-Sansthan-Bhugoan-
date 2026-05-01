@@ -23,6 +23,11 @@ const memberSchema = mongoose.Schema({
     mobile: { type: String },
     date_of_birth: { type: Date },
     blood_group: { type: String },
+    gender: { 
+        type: String, 
+        enum: ['Male', 'Female', 'Other'],
+        default: 'Male'
+    },
     status: {
         type: String,
         enum: ['active', 'inactive'],
