@@ -72,31 +72,34 @@ const Badge = ({ children, color = BRAND }) => (
 );
 
 // ─── STAT CARD ───────────────────────────────────────────────────────────────
-const StatCard = ({ label, sublabel, value, sub, icon: Icon, accent }) => (
-  <div style={{
-    background: '#fff', borderRadius: '16px', padding: '24px',
-    border: '1px solid #f0f0f0',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
-    display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '180px', flex: '1 1 180px',
-    transition: 'transform 0.2s, box-shadow 0.2s',
-    cursor: 'default'
-  }}
-  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.08)'; }}
-  onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.03)'; }}
-  >
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <div style={{ background: accent + '15', padding: '10px', borderRadius: '12px', display: 'flex' }}>
-        <Icon size={24} color={accent} />
+const StatCard = ({ label, sublabel, value, sub, icon: Icon, accent }) => {
+  const isEmoji = typeof Icon === 'string';
+  return (
+    <div style={{
+      background: '#fff', borderRadius: '16px', padding: '24px',
+      border: '1px solid #f0f0f0',
+      boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
+      display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '180px', flex: '1 1 180px',
+      transition: 'transform 0.2s, box-shadow 0.2s',
+      cursor: 'default'
+    }}
+    onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.08)'; }}
+    onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.03)'; }}
+    >
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ background: accent + '15', padding: '10px', borderRadius: '12px', display: 'flex', width: '44px', height: '44px', alignItems: 'center', justifyContent: 'center' }}>
+          {isEmoji ? <span style={{ fontSize: '20px' }}>{Icon}</span> : <Icon size={24} color={accent} />}
+        </div>
+        {sub && <div style={{ fontSize: '11px', color: '#888', fontWeight: 600 }}>{sub}</div>}
       </div>
-      {sub && <div style={{ fontSize: '11px', color: '#888', fontWeight: 600 }}>{sub}</div>}
+      <div style={{ marginTop: '12px' }}>
+        <div style={{ fontSize: '28px', fontWeight: 800, color: '#1a1a1a', lineHeight: 1 }}>{typeof value === 'number' ? fmt(value) : (value || '—')}</div>
+        <div style={{ fontSize: '13px', fontWeight: 700, color: '#666', marginTop: '4px' }}>{label}</div>
+        {sublabel && <div style={{ fontSize: '11px', color: '#999', marginTop: '2px' }}>{sublabel}</div>}
+      </div>
     </div>
-    <div style={{ marginTop: '12px' }}>
-      <div style={{ fontSize: '28px', fontWeight: 800, color: '#1a1a1a', lineHeight: 1 }}>{fmt(value)}</div>
-      <div style={{ fontSize: '13px', fontWeight: 700, color: '#666', marginTop: '4px' }}>{label}</div>
-      {sublabel && <div style={{ fontSize: '11px', color: '#999', marginTop: '2px' }}>{sublabel}</div>}
-    </div>
-  </div>
-);
+  );
+};
 
 // ─── FILTER BAR ──────────────────────────────────────────────────────────────
 const FilterBar = ({ filters, onChange, onReset, districts, villages, showSearch }) => {
@@ -829,13 +832,13 @@ const Reports = () => {
 };
 
 // ─── EXPORT BUTTON ATOM ───────────────────────────────────────────────────────
-const ExportBtn = ({ onClick, icon, label, color }) => (
+const ExportBtn = ({ onClick, icon: Icon, label, color }) => (
   <button onClick={onClick}
     style={{
       display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px', border: 'none',
       background: color, color: '#fff', fontSize: '13px', fontWeight: 700, cursor: 'pointer', boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
     }}>
-    {icon} {label}
+    {Icon && <Icon size={16} />} {label}
   </button>
 );
 
