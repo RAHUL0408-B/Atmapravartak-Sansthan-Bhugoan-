@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useEffect, useContext, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import AuthContext from '../contexts/AuthContext';
 import { getMembers, deleteMember } from '../services/memberService';
