@@ -302,8 +302,10 @@ const Reports = () => {
     filtered.forEach(m => {
       const d = parseDate(m.joining_date || m.created_at);
       if (!d) return;
-      const y = d.getFullYear().toString();
-      map[y] = (map[y] || 0) + 1;
+      const y = d.getFullYear();
+      if (y < 1900 || y > 2050) return; // Ignore invalid years
+      const yStr = y.toString();
+      map[yStr] = (map[yStr] || 0) + 1;
     });
     return Object.entries(map).sort().map(([y, v]) => ({ year: y, count: v }));
   }, [filtered]);

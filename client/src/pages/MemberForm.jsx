@@ -281,12 +281,12 @@ const MemberForm = () => {
 
                     <div style={formGroupStyle}>
                         <label style={labelStyle}>सदस्य नोंदणी तारीख (Joining Date)</label>
-                        <input type="date" name="joining_date" value={formData.joining_date} onChange={handleChange} className="input-style" />
+                        <input type="date" name="joining_date" value={formData.joining_date} onChange={handleChange} className="input-style" min="1900-01-01" max="2050-12-31" />
                     </div>
 
                     <div style={formGroupStyle}>
                         <label style={labelStyle}>जन्म तारीख</label>
-                        <input type="date" name="date_of_birth" value={formData.date_of_birth} onChange={handleChange} className="input-style" />
+                        <input type="date" name="date_of_birth" value={formData.date_of_birth} onChange={handleChange} className="input-style" min="1900-01-01" max="2050-12-31" />
                     </div>
 
 
